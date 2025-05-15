@@ -2,26 +2,40 @@
 <html>
 <body>
   <h1>PDF文件列表</h1>
-  <ul id="pdf-list"></ul>
+  <ul id="pdf-list"></ul> <!-- 列表容器与截图位置一致 -->
 
+  <!-- ↓↓↓ 替换这里的脚本内容 ↓↓↓ -->
   <script>
-    // 修正后的代码（仍然受限于GitHub限制）
-    fetch('./pdfs/')
-      .then(r => r.text())
-      .then(t => {
-        const files = [...t.matchAll(/href="(.*?\.pdf)"/g)]
-        files.forEach(f => {
-          const li = document.createElement('li')
-          li.innerHTML = `<a href="./pdfs/${f[1]}" target="_blank">${f[1]}</a>`
-          document.getElementById('pdf-list').appendChild(li)
-        })
+    // 配置参数（根据你的仓库修改）
+    const userName = "squiz123"     // 👈 改为你的GitHub用户名
+    const repoName = "squiz123.github.io" // 👈 改为仓库名
+    const folderPath = "pdfs"       // 👈 保持与截图中的路径一致
+
+    // API请求
+    fetch(`https://api.github.com/repos/${userName}/${repoName}/contents/${folderPath}`)
+      .then(response => response.json())
+      .then(files => {
+        const listContainer = document.getElementById('pdf-list');
+        
+        files.forEach(file => {
+          if (file.name.endsWith('.pdf')) {
+            const listItem = `<li style="margin:10px 0;">
+              <a href="${file.download_url}" 
+                 style="color:#0366d6; text-decoration:none;"
+                 target="_blank">
+                📄 ${file.name}
+              </a>
+            </li>`;
+            listContainer.innerHTML += listItem;
+          }
+        });
       })
-      .catch(e => {
-        console.error('错误：服务器禁止目录访问，推荐改用方案B', e)
+      .catch(error => {
+        console.error('加载失败:', error);
         document.getElementById('pdf-list').innerHTML = `
-          <li>⚠️ 自动列表功能不可用，请<a href="https://github.com/squiz123/squiz123.github.io">直接访问仓库</a>查看PDF文件</li>
-        `
-      })
+          <li style="color:red;">⚠️ 文件加载失败，请检查控制台</li>
+        `;
+      });
   </script>
 </body>
 </html>
