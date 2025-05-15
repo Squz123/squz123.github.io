@@ -6,10 +6,10 @@
 
   <script>
     // 自动获取pdf目录下的文件列表
-    fetch('./pdf/')
+    fetch('./pdfs/')
       .then(r => r.text())
       .then(t => {
-        const files = [...t.matchAll(/href="(.*?\.pdf)"/g)]
+        const files = [...t.matchAll(/href="(.*?\.pdfs)"/g)]
         files.forEach(f => {
           const li = document.createElement('li')
           li.innerHTML = `<a href="./pdf/${f[1]}">${f[1]}</a>`
