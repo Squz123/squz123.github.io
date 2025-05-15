@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>PDF文件列表</h1>
+  <ul id="pdf-list"></ul>
+
+  <script>
+    // 自动获取pdf目录下的文件列表
+    fetch('./pdf/')
+      .then(r => r.text())
+      .then(t => {
+        const files = [...t.matchAll(/href="(.*?\.pdf)"/g)]
+        files.forEach(f => {
+          const li = document.createElement('li')
+          li.innerHTML = `<a href="./pdf/${f[1]}">${f[1]}</a>`
+          document.getElementById('pdf-list').appendChild(li)
+        })
+      })
+  </script>
+</body>
+</html>
